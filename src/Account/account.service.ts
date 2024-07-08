@@ -3,29 +3,28 @@ import { CreateAccountDto } from './dto';
 import { UpdateAccountDto } from './dto';
 import { BaseAccountDto } from './dto';
 
+interface User {
+  userId: number;
+  email: string;
+  password: string;
+}
+
 @Injectable()
 export class AccountService {
-  create(@Body() createAccountDto: CreateAccountDto) {
-    return 'This action adds a new account';
-  }
+  private readonly users: User[] = [
+    {
+      userId: 1,
+      email: 'ptt@gmail.com',
+      password: 'changeme',
+    },
+    {
+      userId: 2,
+      email: 'ptt1@gmail.com',
+      password: 'guess',
+    },
+  ];
 
-  findAll() {
-    return `This action returns all account`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} account`;
-  }
-
-  update(id: number, updateAccountDto: UpdateAccountDto) {
-    return `This action updates a #${id} account`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} account`;
-  }
-
-  signIn(email: string, password: string){
-    return `This action signs in a ${email} account`;
+  async findOne(email: string): Promise<User | undefined> {
+    return this.users.find((user) => user.email === email);
   }
 }
