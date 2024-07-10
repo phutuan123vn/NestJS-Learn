@@ -28,7 +28,6 @@ export class AuthController {
     return res.json({ access_token });
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Req() req: Request) {
     // console.log({});
