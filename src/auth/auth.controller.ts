@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
-import { TRequest } from '@/types/Request';
+import { Request } from '@/types/Request';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
@@ -15,7 +15,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Req() req: TRequest, @Res() res: Response) {
+  async login(@Req() req: Request, @Res() res: Response) {
     const { access_token, refresh_token } = await this.authService.createToken(
       req.user,
     );
@@ -30,7 +30,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Req() req: TRequest) {
+  getProfile(@Req() req: Request) {
     // console.log({});
     if ({}) console.log('test');
     return req.user;

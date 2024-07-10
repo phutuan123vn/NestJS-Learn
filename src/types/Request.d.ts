@@ -1,5 +1,5 @@
 import { Request } from "express";
 
-export type TRequest = Request & {
+export type Request = Request & {
     authType: string | undefined;
 }
