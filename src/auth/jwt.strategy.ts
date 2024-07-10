@@ -10,17 +10,17 @@ export class AccessJwtStrategy extends PassportStrategy(
   Strategy,
   'access-jwt',
 ) {
-  constructor(private readonly configService: ConfigService) {
+  constructor(configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('ACCESS_JWT_SECRET'),
+      secretOrKey: configService.get<string>('JWT_ACCESS_KEY'),
     });
   }
 
   async validate(payload: any) {
     // Validate and return a user object for access token
-    const user = { userId: payload.sub, username: payload.username };
+    const user = { userId: payload.userID, email: payload.email, type: payload.type};
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -33,25 +33,25 @@ export class RefreshJwtStrategy extends PassportStrategy(
   Strategy,
   'refresh-jwt',
 ) {
-  constructor(private readonly configService: ConfigService) {
+  constructor(configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req: Request) => {
-          let token = null
+          let token = null;
           if (req && req.cookies) {
-            token = req.cookies['refreshtoken']
+            token = req.cookies['refreshtoken'];
           }
-          return token
-        }
+          return token;
+        },
       ]),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('REFRESH_JWT_SECRET'),
+      secretOrKey: configService.get<string>('JWT_REFRESH_KEY'),
     });
   }
 
   async validate(payload: any) {
     // Validate and return a user object for refresh token
-    const user = { userId: payload.sub, username: payload.username };
+    const user = { userId: payload.userID, email: payload.email, type: payload.type};
     if (!user) {
       throw new UnauthorizedException();
     }
