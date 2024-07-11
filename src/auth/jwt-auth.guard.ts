@@ -36,3 +36,6 @@ export class JwtAuthGuard extends AuthGuard(['access-jwt','refresh-jwt']) {
     return user;
   }
 }
+
+
+export class LocalAuthGuard extends AuthGuard('local'){}

@@ -1,17 +1,23 @@
 import { UserService } from '@/user/user.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ModuleRef } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnModuleInit{
+  private userService: UserService;
   constructor(
-    private userService: UserService,
+    private moduleRef: ModuleRef,
     private jwtService: JwtService,
     readonly configService: ConfigService,
   ) {}
+
+  onModuleInit() {
+    this.userService = this.moduleRef.get(UserService, { strict: false });
+  }
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.userService.findUser(email, {
@@ -19,7 +25,6 @@ export class AuthService {
       email: true,
       password: true,
     });
-    console.log(user);
     if (user && (await bcrypt.compare(password, user.password))) {
       const { password, ...result } = user;
       return result;

@@ -3,11 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { AuthInterceptor } from './auth/auth.interceptor';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { AuthService } from './auth/auth.service';
+import { AuthInterceptor, AuthModule, AuthService, JwtAuthGuard } from '@/auth';
 
 @Module({
   imports: [
@@ -31,9 +28,9 @@ import { AuthService } from './auth/auth.service';
       useFactory(authService: AuthService, configService: ConfigService) {
         return new AuthInterceptor(authService, configService);
       },
-      inject: [AuthService, ConfigService]
+      inject: [AuthService, ConfigService],
       // useClass: AuthInterceptor,
-    }
+    },
   ],
 })
 export class AppModule {}
