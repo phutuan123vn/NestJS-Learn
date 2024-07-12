@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthInterceptor, AuthModule, AuthService, JwtAuthGuard } from '@/auth';
+import { BlogModule } from './blog/blog.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AuthInterceptor, AuthModule, AuthService, JwtAuthGuard } from '@/auth';
     }),
     UserModule,
     AuthModule,
+    BlogModule,
   ],
   controllers: [AppController],
   providers: [

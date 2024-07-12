@@ -36,7 +36,7 @@ export class UserController {
     try {
       user = await this.userService.createUser(createUserDTO);
     }catch (error) {
-      return res.status(400).json({ message: error.message });
+      return res.status(400).json({ error: error.message });
     }
     return res.json(user);
   }
