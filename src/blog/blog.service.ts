@@ -38,4 +38,37 @@ export class BlogService {
       },
     });
   }
+  
+  async getBlogBySlug(slug: string) {
+    return this.prisma.blog.findUnique({
+      where: {
+        slug,
+      },
+      include: {
+        comments: {
+          orderBy: {
+            createdAt: 'desc',
+          }
+        },
+      }
+    });
+  }
+
+  async createComment(slug: string, content: string, user: User) {
+    return this.prisma.blogComment.create({
+      data: {
+        content,
+        blog: {
+          connect: {
+            slug,
+          },
+        },
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+      },
+    })
+  }
 }

@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthInterceptor, AuthModule, AuthService, JwtAuthGuard } from '@/auth';
 import { BlogModule } from './blog/blog.module';
+import { EventsModule } from './Events/events.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { BlogModule } from './blog/blog.module';
       isGlobal: true,
       ignoreEnvFile: true,
     }),
+    EventsModule,
     UserModule,
     AuthModule,
     BlogModule,

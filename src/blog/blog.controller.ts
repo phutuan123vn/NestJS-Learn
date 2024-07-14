@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { Request } from '@/types';
 import { CreateBlogDTO } from './dto';
@@ -14,9 +14,38 @@ export class BlogController {
     return await this.blogService.createBlog(createBlogDTO, req.user);
   }
 
-  @Public()
-  @Get('')
+  // @Public()
+  @Post('')
   async getBlogs() {
-    return await this.blogService.getBlogs();
+    const result = await this.blogService.getBlogs();
+    return { data: result };
+  }
+
+  @Public()
+  @Get(':slug')
+  async getBlogBySlug(@Param('slug') slug: string) {
+    const blog = await this.blogService.getBlogBySlug(slug);
+    if (!blog) {
+      throw new Error('Blog not found');
+    }
+    return { data: blog };
+    // return slug;
+  }
+
+  @Post(':slug/comment')
+  async createComment(
+    @Param('slug') slug: string,
+    @Body() comment: { content: string },
+    @Req() req: Request,
+  ) {
+    const user = req.user;
+    this.blogService
+      .createComment(slug, comment.content, user)
+      .then(() => {
+        return { message: 'Comment created' };
+      })
+      .catch((err) => {
+        return { error: err, message: 'Error creating comment' };
+      });
   }
 }
