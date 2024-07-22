@@ -17,6 +17,7 @@ export class AuthInterceptor implements NestInterceptor {
         const user = request.user;
         const {access_token} = await this.authService.createToken(user);
         // return {data, access_token};
+        // console.log(data);
         data['access_token'] = access_token;
       }
       return data;

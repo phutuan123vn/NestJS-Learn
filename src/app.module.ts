@@ -14,7 +14,7 @@ import { EventsModule } from './Events/events.module';
       isGlobal: true,
       ignoreEnvFile: true,
     }),
-    EventsModule,
+    // EventsModule,
     UserModule,
     AuthModule,
     BlogModule,
