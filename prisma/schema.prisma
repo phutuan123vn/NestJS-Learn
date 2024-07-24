@@ -50,10 +50,9 @@ model Room {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   messages    RoomMessage[]
-  creator     User          @relation(fields: [creatorId], references: [id])
+  creator     User          @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId   BigInt        @unique
-  groupRoom   GroupRoom     @relation(fields: [groupRoomId], references: [id])
-  groupRoomId BigInt        @unique
+  groupRoom   GroupRoom?     
 }
 
 model GroupRoom {
@@ -61,16 +60,17 @@ model GroupRoom {
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  rooms     Room[]
+  room     Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  roomId   BigInt    @unique
   users     User[]
 }
 
 model RoomMessage {
   id        BigInt   @id @default(autoincrement())
-  content   String
+  message   String
   room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
   roomId    BigInt
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    BigInt
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

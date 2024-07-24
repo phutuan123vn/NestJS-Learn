@@ -7,6 +7,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthInterceptor, AuthModule, AuthService, JwtAuthGuard } from '@/auth';
 import { BlogModule } from './blog/blog.module';
 import { EventsModule } from './Events/events.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -14,10 +15,11 @@ import { EventsModule } from './Events/events.module';
       isGlobal: true,
       ignoreEnvFile: true,
     }),
-    // EventsModule,
+    EventsModule,
     UserModule,
     AuthModule,
     BlogModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [

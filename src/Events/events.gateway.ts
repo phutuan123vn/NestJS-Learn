@@ -26,6 +26,13 @@ export class EventsGateway {
 
   handleConnection(client) {
     // console.log('client connected', client);
+    if (client.handshake.query || client.handshake.query.token) {
+      console.log('client connected with token', client.handshake.query);
+      console.log('client handshake', client.handshake);
+    }
+    if (Object.keys(client.handshake.auth).length === 0) {
+      client.disconnect();
+    }
   }
   
   @UseGuards(AuthGuard)
