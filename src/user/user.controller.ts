@@ -27,7 +27,7 @@ export class UserController {
       path: '/',
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
-    return res.json({ access_token });
+    return res.json({ access_token, user: req.user });
   }
 
   @Post('register')

@@ -12,6 +12,8 @@ import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Server, Socket } from 'socket.io';
 import { AuthGuard } from './websocket.guard';
+import { EventsService } from './events.service';
+import { parse } from 'cookie';
 
 @WebSocketGateway({
   cors: {
@@ -24,18 +26,21 @@ export class EventsGateway {
   @WebSocketServer()
   server: Server;
 
-  handleConnection(client) {
-    // console.log('client connected', client);
-    if (client.handshake.query || client.handshake.query.token) {
-      console.log('client connected with token', client.handshake.query);
-      console.log('client handshake', client.handshake);
-    }
-    if (Object.keys(client.handshake.auth).length === 0) {
+  constructor(
+    private readonly eventsService: EventsService,
+  ){}
+
+  async handleConnection(client) {
+    const cookies = parse(client.handshake.headers.cookie);
+    const payload = await this.eventsService.validateUser(cookies['refreshtoken']);
+    if (!payload) {
       client.disconnect();
     }
+    client.auth = payload;
+    console.log(client)
   }
   
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @SubscribeMessage('events')
   findAll(
     @MessageBody() data: any,
@@ -51,5 +56,13 @@ export class EventsGateway {
   @SubscribeMessage('identity')
   async identity(@MessageBody() data: number): Promise<number> {
     return data;
+  }
+
+  @SubscribeMessage('message')
+  async handleMessage(
+    @MessageBody() data: string,
+    @ConnectedSocket() client: Socket,
+  ): Promise<void> {
+    // const message = await this.eventsService.sendMessage(data, client.handshake.query.token);
   }
 }

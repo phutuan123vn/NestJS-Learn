@@ -49,4 +49,52 @@ export class ChatService {
             }
         })
     }
+
+    async sendMessage(roomID: number, message: string, user: User) {
+        return this.prismaService.roomMessage.create({
+            data: {
+                message: message,
+                room: {
+                    connect: {
+                        id: roomID
+                    }
+                },
+                user: {
+                    connect: {
+                        id: user.userId
+                    }
+                }
+            }
+        })
+    }
+
+    async joinRoom(roomID: number, user: User) {
+        return this.prismaService.groupRoom.update({
+            where: {
+                id: roomID
+            },
+            data: {
+                users: {
+                    connect: {
+                        id: user.userId
+                    }
+                }
+            }
+        })
+    }
+
+    async leaveRoom(roomID: number, user: User) {
+        return this.prismaService.groupRoom.update({
+            where: {
+                id: roomID
+            },
+            data: {
+                users: {
+                    disconnect: {
+                        id: user.userId
+                    }
+                }
+            }
+        })
+    }
 }
